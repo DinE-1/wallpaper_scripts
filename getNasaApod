@@ -6,7 +6,7 @@ apodSelector=astropix
 if [ ! -z $1 ]; then
 	apodSelector=$1
 fi
-apodPageUrl=https://apod.nasa.gov/apod/$apodSelector.html
+apodPageUrl=https://apod.nasa.gov/apod/${apodSelector}.html
 apodPageHTML=$(curl -sL $apodPageUrl)
 
 imagePaths=$(echo "$apodPageHTML" | grep -o image/.*\.jpg)
