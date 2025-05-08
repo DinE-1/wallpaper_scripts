@@ -2,10 +2,17 @@
 wallpaper_dir=$HOME/Pictures/random_wallpapers
 
 randImg=$(find $wallpaper_dir -type f -name img* | shuf -n 1)
+apodRandImg=$(find $wallpaper_dir/nasaApod/ -type f | shuf -n 1)
 
 #delete a random img
-echo removed $randImg
-rm $randImg
+if [ -f $randImg ];then
+	rm $randImg
+	echo removed $randImg
+fi
+if [ -f $apodRandImg ]; then
+	rm $apodRandImg
+	echo removed $apodRandImg
+fi
 #get a random img
 get_rand_img &
 getNasaApod &
