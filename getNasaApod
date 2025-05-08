@@ -1,0 +1,38 @@
+#!/bin/bash
+#get nasa's astronomy picture of the day
+
+#set the first arguement as the last part of the url before .html
+apodSelector=astropix
+if [ ! -z $1 ]; then
+	apodSelector=$1
+fi
+apodPageUrl=https://apod.nasa.gov/apod/$apodSelector.html
+apodPageHTML=$(curl -sL $apodPageUrl)
+
+imagePaths=$(echo "$apodPageHTML" | grep -o image/.*\.jpg)
+if [ -z "$imagePaths" ]; then
+	echo -e "No images as NASA APOD today \n$(echo "$apodPageHTML" | grep -i \<.*src.*)"
+	exit 0
+fi
+#get the URLs of the images
+apodImgUrls=()
+for imagePath in ${imagePaths}; do
+	apodImgUrls+=("https://apod.nasa.gov/apod/${imagePath}")
+done
+#image saving location
+picsDir=$HOME/Pictures/random_wallpapers/nasaApod
+picName=$(echo ${apodImgUrls[0]} | awk -F'/' '{print $NF}')
+picPath=$picsDir/$picName
+
+#exit with success if the pic is already found
+if [ -e $picPath ]; then
+	#print in color
+	echo -e "nasa apod \e[33m$picName\e[0m found\e"
+	exit 0
+fi
+
+#get and save the image
+for imageUrl in "${apodImgUrls[@]}";do
+	curl -LO $imageUrl --output-dir $picsDir
+	echo saved $(echo $imageUrl | awk -F'/' '{print $NF}')
+done

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#set the path of the pics dir
+img_parent_dir=$1
+if [ ! $1 ]; then
+	img_parent_dir=$HOME/Pictures/random_wallpapers
+fi
+
+#name of the image file
+img_name=img_$RANDOM
+img_path=$img_parent_dir/$img_name
+
+#url of the image
+img_url=https://picsum.photos/1920/1080
+
+#download and save the image
+curl -L $img_url -o $img_path
+echo saved $img_name

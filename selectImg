@@ -1,0 +1,14 @@
+#!/bin/bash
+picsDir=$HOME/Pictures/random_wallpapers
+
+function selectDir(){
+	dir="$(find $picsDir -type d | shuf -n 1)"
+}
+
+selectDir
+while [ -z "$(find "$dir" -type f)" ]; do
+	selectDir
+done
+
+pic=$(find "$dir" -type f | shuf -n 1)
+echo $pic

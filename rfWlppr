@@ -1,0 +1,11 @@
+#!/bin/bash
+wallpaper_dir=$HOME/Pictures/random_wallpapers
+
+randImg=$(find $wallpaper_dir -type f -name img* | shuf -n 1)
+
+#delete a random img
+echo removed $randImg
+rm $randImg
+#get a random img
+get_rand_img &
+getNasaApod &
