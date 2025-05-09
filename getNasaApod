@@ -2,21 +2,29 @@
 #get nasa's astronomy picture of the day
 
 #set the first arguement as the last part of the url before .html
-apodSelector=astropix
+apodSelector=ap
 if [ ! -z $1 ]; then
 	apodSelector=$1
 fi
-apodPageUrl=https://apod.nasa.gov/apod/${apodSelector}.html
-apodPageHTML=$(curl -sL $apodPageUrl)
 
-imagePaths=$(echo "$apodPageHTML" | grep -o image/.*\.jpg)
+#get the html file of the apod page
+apodPageUrl=https://apod.nasa.gov/apod/${apodSelector}.html
+echo "getting ${apodPageUrl}"
+apodPageHTML=$(curl -L $apodPageUrl)
+echo "got ${apodPageUrl}"
+
+imagePaths=$(echo "$apodPageHTML" | grep -Eo "image/.*\.[^'\"]+" )
+#exit if NASA APOD image not found
 if [ -z "$imagePaths" ]; then
-	echo -e "No images as NASA APOD today \n$(echo "$apodPageHTML" | grep -i \<.*src.*)"
+	echo -e "No images as NASA APOD today \n$(echo "$apodPageHTML" | grep -i .*src.*)"
 	exit 0
 fi
+
 #get the URLs of the images
 apodImgUrls=()
 for imagePath in ${imagePaths}; do
+	echo $imagePath
+	#construct the url
 	apodImgUrls+=("https://apod.nasa.gov/apod/${imagePath}")
 done
 #image saving location
